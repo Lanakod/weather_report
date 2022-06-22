@@ -11,6 +11,7 @@ import { InitWebhook } from "@utils";
 import UseMenu from "@ui/menu";
 import { isOwnerMiddleware } from "@middlewares";
 import UseCatcher from "./utils/errors-catcher.util";
+import { hydrate } from "@grammyjs/hydrate";
 
 const Start = async () => {
   UseCatcher(bot);
@@ -19,6 +20,7 @@ const Start = async () => {
     return ctx.chat?.id.toString();
   };
 
+  bot.use(hydrate());
   bot.use(sequentialize(getSessionKey));
   bot.use(session({ getSessionKey }));
 

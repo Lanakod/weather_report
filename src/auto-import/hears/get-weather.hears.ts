@@ -9,15 +9,16 @@ import {
 const hears: IHears = {
   trigger: MAIN_KEYBOARD_NAME,
   callback: async (ctx) => {
-    await ctx.reply(GATHERING_WEATHER_DATA);
+    const msg = await ctx.reply(GATHERING_WEATHER_DATA);
     const { pressure, feels_like, temp, speed, direction } =
       await GetWeatherInMoscow();
-    return await ctx.reply(
+    await ctx.reply(
       WEATHER_FORECAST_MSG(temp, feels_like, pressure, speed, direction),
       {
         parse_mode: "HTML",
       }
     );
+    await msg.delete().catch(() => {});
   },
 };
 
