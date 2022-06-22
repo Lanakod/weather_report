@@ -9,11 +9,18 @@ import { WEATHER_FORECAST_MSG } from "@const/messages/weather-messages.constant"
 export default new Menu(WEATHER_MENU_ID).text(
   WEATHER_MENU_NAME,
   async (ctx) => {
-    const { pressure, feels_like, temp, speed, direction } =
+    const { pressure, feels_like, temp, speed, direction, humidity } =
       await GetWeatherInMoscow();
     await ctx.menu.close();
     return await ctx.reply(
-      WEATHER_FORECAST_MSG(temp, feels_like, pressure, speed, direction),
+      WEATHER_FORECAST_MSG(
+        temp,
+        feels_like,
+        pressure,
+        speed,
+        direction,
+        humidity
+      ),
       {
         parse_mode: "HTML",
       }

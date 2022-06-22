@@ -1,4 +1,10 @@
 import { Keyboard } from "grammy";
-import { MAIN_KEYBOARD_NAME } from "@const/keyboards/main.constant";
+import {
+  MAIN_KEYBOARD_GET_CURRENT_WEATHER,
+  MAIN_KEYBOARD_GET_WEATHER_FOR_DAY,
+} from "@const/keyboards/main.constant";
 
-export default new Keyboard().text(MAIN_KEYBOARD_NAME).row();
+export default new Keyboard()
+  .text(MAIN_KEYBOARD_GET_CURRENT_WEATHER)
+  .text(MAIN_KEYBOARD_GET_WEATHER_FOR_DAY)
+  .row();

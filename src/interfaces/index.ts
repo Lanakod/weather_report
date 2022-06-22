@@ -5,3 +5,4 @@ export { default as IHears } from "./hears.interface";
 export { default as IInlineQuery } from "./inline-query.interface";
 
 export { default as IWeather } from "./api/weather.interface";
+export { default as ITomorrowWeather } from "./api/tomorrow-weather.interface";

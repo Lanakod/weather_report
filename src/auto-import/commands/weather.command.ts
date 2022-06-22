@@ -10,11 +10,17 @@ const command: ICommand = {
   description: "Узнать погоду в Москве",
   callback: async (ctx) => {
     const msg = await ctx.reply(GATHERING_WEATHER_DATA);
-
-    const { pressure, feels_like, temp, speed, direction } =
+    const { pressure, feels_like, temp, speed, direction, humidity } =
       await GetWeatherInMoscow();
     await ctx.reply(
-      WEATHER_FORECAST_MSG(temp, feels_like, pressure, speed, direction),
+      WEATHER_FORECAST_MSG(
+        temp,
+        feels_like,
+        pressure,
+        speed,
+        direction,
+        humidity
+      ),
       {
         parse_mode: "HTML",
       }
