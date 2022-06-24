@@ -5,6 +5,7 @@ import { NGROK_PORT, NGROK_TOKEN } from "@env/bot.env";
 
 const InitWebhook = async (bot: Bot<BotContext>) => {
   try {
+    await bot.api.deleteWebhook();
     console.log("Trying to connect via NGROK");
     const url = await ngrok.connect({
       authtoken: NGROK_TOKEN,
