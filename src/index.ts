@@ -13,15 +13,23 @@ import { hydrate } from "@grammyjs/hydrate";
 import { apiThrottler } from "@grammyjs/transformer-throttler";
 import InitMiddlewares from "@middlewares";
 import express from "express";
-import http from "http";
+import https from "https";
+import * as fs from "fs";
+import path from "path";
 
 const Start = async () => {
   const app = express();
   app.use(express.json());
 
   app.use(webhookCallback(bot, "express"));
-  const server = http.createServer(app);
-  server.listen(3030, () => console.log("Listening on port 3030"));
+  const server = https.createServer(
+    {
+      key: fs.readFileSync(path.resolve("privkey.key")),
+      cert: fs.readFileSync(path.resolve("cert.pem")),
+    },
+    app
+  );
+  server.listen(3030, "127.0.0.1", () => console.log("Listening on port 3030"));
 
   UseCatcher(bot);
 
