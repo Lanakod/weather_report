@@ -13,13 +13,15 @@ import { hydrate } from "@grammyjs/hydrate";
 import { apiThrottler } from "@grammyjs/transformer-throttler";
 import InitMiddlewares from "@middlewares";
 import express from "express";
+import http from "http";
 
 const Start = async () => {
   const app = express();
   app.use(express.json());
 
   app.use(webhookCallback(bot, "express"));
-  app.listen(3030, () => console.log("Listening on port 3030"));
+  const server = http.createServer(app);
+  server.listen(3030, () => console.log("Listening on port 3030"));
 
   UseCatcher(bot);
 
