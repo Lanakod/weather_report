@@ -12,20 +12,23 @@ const hears: IHears = {
     const msg = await ctx.reply(GATHERING_WEATHER_DATA);
     const { pressure, feels_like, temp, speed, direction, humidity } =
       await GetWeatherInMoscow();
-    await ctx.reply(
-      WEATHER_FORECAST_MSG(
-        temp,
-        feels_like,
-        pressure,
-        speed,
-        direction,
-        humidity
-      ),
-      {
-        parse_mode: "HTML",
-      }
+    setTimeout(
+      async () =>
+        msg.editText(
+          WEATHER_FORECAST_MSG(
+            temp,
+            feels_like,
+            pressure,
+            speed,
+            direction,
+            humidity
+          ),
+          {
+            parse_mode: "HTML",
+          }
+        ),
+      1000
     );
-    await msg.delete().catch(() => {});
   },
 };
 

@@ -6,6 +6,7 @@ import { BotContext } from "@Types";
 import { Table } from "console-table-printer";
 
 export default class InlineQueriesHandler implements IHandler {
+  name = "Inline Queries";
   init = async (bot: Bot<BotContext>) => {
     const table = new Table({
       title: "Inline Queries",

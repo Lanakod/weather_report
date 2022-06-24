@@ -5,7 +5,7 @@ import { WEATHER_FORECAST_MSG } from "@const/messages/weather-messages.constant"
 const query: IInlineQuery = {
   trigger: /[П,п]огода/,
   callback: async (ctx) => {
-    const { pressure, feels_like, temp, speed, direction } =
+    const { pressure, feels_like, temp, speed, direction, humidity } =
       await GetWeatherInMoscow();
     await ctx.answerInlineQuery(
       [
@@ -19,7 +19,8 @@ const query: IInlineQuery = {
               feels_like,
               pressure,
               speed,
-              direction
+              direction,
+              humidity
             ),
             parse_mode: "HTML",
           },

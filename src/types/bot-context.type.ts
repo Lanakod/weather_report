@@ -1,8 +1,9 @@
-import { Context, SessionFlavor } from "grammy";
+import { SessionFlavor } from "grammy";
 import { IBotConfig } from "@interfaces";
 import { HydrateFlavor } from "@grammyjs/hydrate";
+import { ParseModeContext } from "@grammyjs/parse-mode";
 
-type BotContext = HydrateFlavor<Context> & {
+type BotContext = HydrateFlavor<ParseModeContext> & {
   config: IBotConfig;
 } & SessionFlavor<any>;
 

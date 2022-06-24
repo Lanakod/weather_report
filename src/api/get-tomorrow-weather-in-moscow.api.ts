@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ITomorrowWeather, IWeather } from "@interfaces";
+import { ITomorrowWeather } from "@interfaces";
 import { OPEN_WEATHER_TOKEN } from "@env/bot.env";
 
 const GetTomorrowWeatherInMoscow = async () => {

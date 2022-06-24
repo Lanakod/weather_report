@@ -6,6 +6,7 @@ import { BotContext } from "@Types";
 import { Table } from "console-table-printer";
 
 export default class CommandsHandler implements IHandler {
+  name = "Hears";
   init = async (bot: Bot<BotContext>) => {
     const table = new Table({
       title: "Hears Loaded",

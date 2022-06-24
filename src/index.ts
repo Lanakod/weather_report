@@ -3,15 +3,15 @@ DotEnvConfig({
   path: `.env.${process.env.NODE_ENV}`,
 });
 
-import { Context, GrammyError, HttpError, session } from "grammy";
-import { sequentialize } from "@grammyjs/runner";
+import { Context, session } from "grammy";
+import { run, sequentialize } from "@grammyjs/runner";
 import InitHandlers from "@handlers";
 import bot from "./bot";
-import { InitWebhook } from "@utils";
+import { InitWebhook, UseCatcher } from "@utils";
 import UseMenu from "@ui/menu";
-import { isOwnerMiddleware } from "@middlewares";
-import UseCatcher from "./utils/errors-catcher.util";
 import { hydrate } from "@grammyjs/hydrate";
+import { apiThrottler } from "@grammyjs/transformer-throttler";
+import InitMiddlewares from "@middlewares";
 
 const Start = async () => {
   UseCatcher(bot);
@@ -20,20 +20,24 @@ const Start = async () => {
     return ctx.chat?.id.toString();
   };
 
+  bot.api.config.use(apiThrottler());
+
   bot.use(hydrate());
   bot.use(sequentialize(getSessionKey));
   bot.use(session({ getSessionKey }));
 
-  bot.use(isOwnerMiddleware);
+  await InitMiddlewares(bot);
 
   UseMenu(bot);
 
   await InitHandlers(bot);
   await InitWebhook(bot);
 
-  await bot.start({
-    onStart: (botInfo) => console.log(`Bot started - @${botInfo.username}`),
-  });
+  const runner = run(bot);
+  if (runner.isRunning()) {
+    await bot.init();
+    console.log(`Bot started - @${bot.botInfo.username}`);
+  }
 };
 
 Start();
