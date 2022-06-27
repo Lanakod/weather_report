@@ -7,4 +7,5 @@ import {
 export default new Keyboard()
   .text(MAIN_KEYBOARD_GET_CURRENT_WEATHER)
   .text(MAIN_KEYBOARD_GET_WEATHER_FOR_DAY)
+  .webApp('Site', 'https://tg.lanakod.host')
   .row();
