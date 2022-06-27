@@ -17,6 +17,7 @@ import https from "https";
 import * as fs from "fs";
 import path from "path";
 import { IS_PROD } from "@env/bot.env";
+import { debug } from "console";
 
 const Start = async () => {
   if (IS_PROD) {
@@ -33,8 +34,14 @@ const Start = async () => {
     );
     server.listen(3030, "127.0.0.1", () => console.log("Listening on port 3030"));
 
-    process.once("SIGINT", server.close);
-    process.once("SIGTERM", server.close);
+    process.once("SIGINT", () => {
+      debug('SIGINT signal received: closing HTTP server')
+      server.close(() => debug('HTTPS Server stoped'))
+    });
+    process.once("SIGTERM", () => {
+      debug('SIGTERN signal received: closing HTTP server')
+      server.close(() => debug('HTTPS Server stoped'))
+    });
   }
 
   UseCatcher(bot);
