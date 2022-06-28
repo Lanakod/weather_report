@@ -1,13 +1,13 @@
 import glob from "glob-promise";
 import path from "path";
-import { Bot } from "grammy";
 import { IHandler, IHears } from "@interfaces";
 import { BotContext } from "@Types";
 import { Table } from "console-table-printer";
+import CustomBot from "../types/custom-bot";
 
 export default class CommandsHandler implements IHandler {
   name = "Hears";
-  init = async (bot: Bot<BotContext>) => {
+  init = async (bot: CustomBot<BotContext>) => {
     const table = new Table({
       title: "Hears Loaded",
     });
@@ -37,7 +37,7 @@ export default class CommandsHandler implements IHandler {
             color: "green",
           }
         );
-        bot.hears(file.trigger, file.callback);
+        bot.handlers.hears.push(file);
       })
     );
     table.printTable();

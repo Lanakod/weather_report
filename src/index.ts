@@ -7,17 +7,17 @@ import { Context, session, webhookCallback } from "grammy";
 import { run, sequentialize } from "@grammyjs/runner";
 import InitHandlers from "@handlers";
 import bot from "./bot";
-import { InitWebhook, UseCatcher } from "@utils";
+import { UseCatcher } from "@utils";
 import UseMenu from "@ui/menu";
 import { hydrate } from "@grammyjs/hydrate";
 import { apiThrottler } from "@grammyjs/transformer-throttler";
 import InitMiddlewares from "@middlewares";
 import express from "express";
 import https from "https";
+import http from "http";
 import * as fs from "fs";
 import path from "path";
-import { IS_PROD } from "@env/bot.env";
-import { debug } from "console";
+import { EXPRESS_PORT, IS_PROD } from "@env/bot.env";
 
 const Start = async () => {
   if (IS_PROD) {
@@ -25,22 +25,44 @@ const Start = async () => {
     app.use(express.json());
 
     app.use(webhookCallback(bot, "express"));
-    const server = https.createServer(
+
+    const key = fs.existsSync(path.resolve("privkey.key"))
+      ? fs.readFileSync(path.resolve("privkey.key"))
+      : null;
+    const cert = fs.existsSync(path.resolve("cert.pem"))
+      ? fs.readFileSync(path.resolve("cert.pem"))
+      : null;
+
+    const server =
+      !key || !cert
+        ? http.createServer(app)
+        : https.createServer(
+            {
+              key,
+              cert,
+            },
+            app
+          );
+    server.listen(
       {
-        key: fs.readFileSync(path.resolve("privkey.key")),
-        cert: fs.readFileSync(path.resolve("cert.pem")),
+        port: EXPRESS_PORT,
+        host: "127.0.0.1",
       },
-      app
+      () =>
+        console.log(
+          `Listening on ${
+            !key || !cert ? "http" : "https"
+          }://127.0.0.1:${EXPRESS_PORT}`
+        )
     );
-    server.listen(3030, "127.0.0.1", () => console.log("Listening on port 3030"));
 
     process.once("SIGINT", () => {
-      debug('SIGINT signal received: closing HTTP server')
-      server.close(() => debug('HTTPS Server stoped'))
+      console.log("SIGINT signal received: closing server");
+      server.close(() => console.log("Server stoped"));
     });
     process.once("SIGTERM", () => {
-      debug('SIGTERN signal received: closing HTTP server')
-      server.close(() => debug('HTTPS Server stoped'))
+      console.log("SIGTERN signal received: closing server");
+      server.close(() => console.log("Server stoped"));
     });
   }
 
@@ -70,9 +92,9 @@ const Start = async () => {
     }
   }
 
-  bot.on(':web_app_data', async (ctx) => {
-    await ctx.reply('Да, это работающее веб-приложение!')
-  })
+  bot.on(":web_app_data", async (ctx) => {
+    await ctx.reply("Да, это работающее веб-приложение!");
+  });
 };
 
 Start();

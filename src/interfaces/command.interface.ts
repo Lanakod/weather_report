@@ -6,4 +6,5 @@ export default interface ICommand {
   description: string;
   callback: (ctx: CommandContext<BotContext>) => any;
   hidden?: boolean;
+  inDevOnly?: boolean;
 }

@@ -1,13 +1,14 @@
 import glob from "glob-promise";
 import path from "path";
-import { Bot } from "grammy";
 import { ICommand, IHandler } from "@interfaces";
 import { BotContext } from "@Types";
 import { Table } from "console-table-printer";
+import { IS_PROD } from "@env/bot.env";
+import CustomBot from "../types/custom-bot";
 
 export default class CommandsHandler implements IHandler {
   name = "Commands";
-  init = async (bot: Bot<BotContext>) => {
+  init = async (bot: CustomBot<BotContext>) => {
     const table = new Table({
       title: "Commands Loaded",
     });
@@ -18,6 +19,7 @@ export default class CommandsHandler implements IHandler {
     await Promise.allSettled(
       files.map(async (f) => {
         const file = (await import(f)).default as ICommand;
+        if (IS_PROD && file.inDevOnly) return;
         if (!file.command)
           return table.addRow(
             { name: f.split("/").pop(), state: "Missing name" },
@@ -49,11 +51,10 @@ export default class CommandsHandler implements IHandler {
             color: "green",
           }
         );
-        bot.command(file.command, file.callback);
-        if (!file.hidden) commands.push(file);
+        bot.handlers.commands.push(file);
       })
     );
     table.printTable();
-    await bot.api.setMyCommands(commands);
+    await bot.api.setMyCommands(bot.handlers.commands.filter((c) => !c.hidden));
   };
 }

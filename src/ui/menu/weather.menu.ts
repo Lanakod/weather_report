@@ -6,5 +6,6 @@ import {
 } from "@const/menus/weather.constant";
 
 export default new Menu(WEATHER_MENU_ID).webApp(
-  WEATHER_MENU_NAME, 'https://tg.lanakod.host'
+  WEATHER_MENU_NAME,
+  "https://tg.lanakod.host"
 );

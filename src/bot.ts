@@ -1,8 +1,8 @@
-import { Bot } from "grammy";
 import { TOKEN } from "@env/bot.env";
 import { BotContext } from "@Types";
+import CustomBot from "./types/custom-bot";
 
-const bot = new Bot<BotContext>(TOKEN, {
+const bot = new CustomBot<BotContext>(TOKEN, {
   client: {
     canUseWebhookReply: (method) => method === "sendChatAction",
   },
